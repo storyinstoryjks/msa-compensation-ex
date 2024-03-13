@@ -2,6 +2,7 @@ package compensation.domain;
 
 import compensation.InventoryApplication;
 import compensation.domain.OutOfStock;
+import compensation.domain.StockDecreased;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
@@ -19,6 +20,18 @@ public class Inventory {
 
     private Long stock;
 
+    @PostPersist
+    public void onPostPersist() {}
+
+    @PostUpdate
+    public void onPostUpdate() {
+        OutOfStock outOfStock = new OutOfStock(this);
+        outOfStock.publishAfterCommit();
+
+        StockDecreased stockDecreased = new StockDecreased(this);
+        stockDecreased.publishAfterCommit();
+    }
+
     public static InventoryRepository repository() {
         InventoryRepository inventoryRepository = InventoryApplication.applicationContext.getBean(
             InventoryRepository.class
@@ -27,28 +40,35 @@ public class Inventory {
     }
 
     public static void decreaseStock(OrderPlaced orderPlaced) {
+        //implement business logic here:
 
-        repository().findById(Long.valueOf(orderPlaced.getProductId())).ifPresent(inventory->{
-            if(inventory.getStock() >=orderPlaced.getQty()){
-                inventory.setStock(inventory.getStock() - orderPlaced.getQty()); 
-                repository().save(inventory);
-            }else{
-                OutOfStock outOfStock = new OutOfStock();
-                outOfStock.setOrderId(orderPlaced.getId()); 
-                outOfStock.publishAfterCommit();
-            }
-            
-        });
+        /** Example 1:  new item 
+        Inventory inventory = new Inventory();
+        repository().save(inventory);
+
+        StockDecreased stockDecreased = new StockDecreased(inventory);
+        stockDecreased.publishAfterCommit();
+        OutOfStock outOfStock = new OutOfStock(inventory);
+        outOfStock.publishAfterCommit();
+        */
+
+        /** Example 2:  finding and process
         
-    }
+        repository().findById(orderPlaced.get???()).ifPresent(inventory->{
+            
+            inventory // do something
+            repository().save(inventory);
 
+            StockDecreased stockDecreased = new StockDecreased(inventory);
+            stockDecreased.publishAfterCommit();
+            OutOfStock outOfStock = new OutOfStock(inventory);
+            outOfStock.publishAfterCommit();
+         });
+        */
+
+    }
     public static void increaseStock(OrderCancelled orderCancelled) {
         
-        repository().findById(Long.valueOf(orderCancelled.getProductId())).ifPresent(inventory->{
-            
-            inventory.setStock(inventory.getStock() + orderCancelled.getQty()); 
-            repository().save(inventory);
-        });
-
     }
+
 }
