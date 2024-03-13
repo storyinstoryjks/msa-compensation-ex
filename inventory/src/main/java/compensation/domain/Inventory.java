@@ -40,7 +40,6 @@ public class Inventory {
     }
 
     public static void decreaseStock(OrderPlaced orderPlaced) {
-        //implement business logic here:
 
         /** Example 1:  new item 
         Inventory inventory = new Inventory();
