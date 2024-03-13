@@ -38,6 +38,11 @@ public class Order {
 
         OrderCancelled orderCancelled = new OrderCancelled(this);
         orderCancelled.publishAfterCommit();
+        // Get request from Order
+        //compensation.external.Order order =
+        //    Application.applicationContext.getBean(compensation.external.OrderService.class)
+        //    .getOrder(/** mapping value needed */);
+
     }
 
     @PreRemove

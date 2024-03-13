@@ -2,6 +2,7 @@ package compensation.domain;
 
 import compensation.InventoryApplication;
 import compensation.domain.OutOfStock;
+import compensation.domain.StockDecreased;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
@@ -21,9 +22,15 @@ public class Inventory {
     private Long stock;
 
     @PostPersist
-    public void onPostPersist() {
+    public void onPostPersist() {}
+
+    @PostUpdate
+    public void onPostUpdate() {
         OutOfStock outOfStock = new OutOfStock(this);
         outOfStock.publishAfterCommit();
+
+        StockDecreased stockDecreased = new StockDecreased(this);
+        stockDecreased.publishAfterCommit();
     }
 
     public static InventoryRepository repository() {
@@ -41,6 +48,10 @@ public class Inventory {
         Inventory inventory = new Inventory();
         repository().save(inventory);
 
+        StockDecreased stockDecreased = new StockDecreased(inventory);
+        stockDecreased.publishAfterCommit();
+        OutOfStock outOfStock = new OutOfStock(inventory);
+        outOfStock.publishAfterCommit();
         */
 
         /** Example 2:  finding and process
@@ -50,6 +61,10 @@ public class Inventory {
             inventory // do something
             repository().save(inventory);
 
+            StockDecreased stockDecreased = new StockDecreased(inventory);
+            stockDecreased.publishAfterCommit();
+            OutOfStock outOfStock = new OutOfStock(inventory);
+            outOfStock.publishAfterCommit();
 
          });
         */
