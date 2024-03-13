@@ -35,13 +35,25 @@ public class Order {
     public void onPostPersist() {
         OrderPlaced orderPlaced = new OrderPlaced(this);
         orderPlaced.publishAfterCommit();
+    }
 
+    // @PrePersist
+    // public void onPrePersist() {
+    //     // Get request from Inventory
+    //     compensation.external.Inventory inventory =
+    //        OrderApplication.applicationContext.getBean(compensation.external.InventoryService.class)
+    //        .getInventory(Long.valueOf(getProductId()));
+
+    //     if(inventory.getStock() < getQty())
+    //         throw new RuntimeException("Out of stock!");
+
+    // }
+
+    @PreRemove
+    public void onPreRemove() {
         OrderCancelled orderCancelled = new OrderCancelled(this);
         orderCancelled.publishAfterCommit();
     }
-
-    @PreRemove
-    public void onPreRemove() {}
 
     public static OrderRepository repository() {
         OrderRepository orderRepository = OrderApplication.applicationContext.getBean(
@@ -52,27 +64,12 @@ public class Order {
 
     //<<< Clean Arch / Port Method
     public static void updateStatus(OutOfStock outOfStock) {
-        //implement business logic here:
-
-        /** Example 1:  new item 
-        Order order = new Order();
-        repository().save(order);
-
-        */
-
-        /** Example 2:  finding and process
-        
-        repository().findById(outOfStock.get???()).ifPresent(order->{
+        repository().findById(outOfStock.getOrderId()).ifPresent(order ->{
             
-            order // do something
+            order.setStatus("Out Of Stock");
             repository().save(order);
-
-
-         });
-        */
+        });
 
     }
-    //>>> Clean Arch / Port Method
 
 }
-//>>> DDD / Aggregate Root

@@ -32,7 +32,7 @@ public class PolicyHandler {
     ) {
         OutOfStock event = outOfStock;
         System.out.println(
-            "\n\n##### listener UpdateStatus : " + outOfStock + "\n\n"
+            "\n\n##### listener UpdateStatus : " + outOfStock.getOrderId() + "\n\n"
         );
 
         // Sample Logic //
