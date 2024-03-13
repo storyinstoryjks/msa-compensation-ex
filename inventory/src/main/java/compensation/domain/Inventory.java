@@ -19,12 +19,6 @@ public class Inventory {
 
     private Long stock;
 
-    @PostPersist
-    public void onPostPersist() {
-        OutOfStock outOfStock = new OutOfStock(this);
-        outOfStock.publishAfterCommit();
-    }
-
     public static InventoryRepository repository() {
         InventoryRepository inventoryRepository = InventoryApplication.applicationContext.getBean(
             InventoryRepository.class
@@ -35,12 +29,13 @@ public class Inventory {
     public static void decreaseStock(OrderPlaced orderPlaced) {
 
         repository().findById(Long.valueOf(orderPlaced.getProductId())).ifPresent(inventory->{
-            if(inventory.getStock() > orderPlaced.getQty()){
+            if(inventory.getStock() >=orderPlaced.getQty()){
                 inventory.setStock(inventory.getStock() - orderPlaced.getQty()); 
                 repository().save(inventory);
             }else{
                 OutOfStock outOfStock = new OutOfStock();
                 outOfStock.setOrderId(orderPlaced.getId()); 
+                outOfStock.publishAfterCommit();
             }
             
         });

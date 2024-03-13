@@ -37,18 +37,6 @@ public class Order {
         orderPlaced.publishAfterCommit();
     }
 
-    // @PrePersist
-    // public void onPrePersist() {
-    //     // Get request from Inventory
-    //     compensation.external.Inventory inventory =
-    //        OrderApplication.applicationContext.getBean(compensation.external.InventoryService.class)
-    //        .getInventory(Long.valueOf(getProductId()));
-
-    //     if(inventory.getStock() < getQty())
-    //         throw new RuntimeException("Out of stock!");
-
-    // }
-
     @PreRemove
     public void onPreRemove() {
         OrderCancelled orderCancelled = new OrderCancelled(this);
