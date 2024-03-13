@@ -12,7 +12,6 @@ import lombok.Data;
 @Entity
 @Table(name = "Order_table")
 @Data
-//<<< DDD / Aggregate Root
 public class Order {
 
     @Id
@@ -49,15 +48,25 @@ public class Order {
         );
         return orderRepository;
     }
-
-    //<<< Clean Arch / Port Method
     public static void updateStatus(OutOfStock outOfStock) {
-        repository().findById(outOfStock.getOrderId()).ifPresent(order ->{
+        //implement business logic here:
+
+        /** Example 1:  new item 
+        Order order = new Order();
+        repository().save(order);
+
+        */
+
+        /** Example 2:  finding and process
+        
+        repository().findById(outOfStock.get???()).ifPresent(order->{
             
-            order.setStatus("Out Of Stock");
+            order // do something
             repository().save(order);
-        });
+
+
+         });
+        */
 
     }
-
 }
