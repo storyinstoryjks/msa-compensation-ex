@@ -23,14 +23,14 @@ public class Inventory {
     @PostPersist
     public void onPostPersist() {}
 
-    @PostUpdate
-    public void onPostUpdate() {
-        OutOfStock outOfStock = new OutOfStock(this);
-        outOfStock.publishAfterCommit();
+    // @PostUpdate
+    // public void onPostUpdate() {
+    //     OutOfStock outOfStock = new OutOfStock(this);
+    //     outOfStock.publishAfterCommit();
 
-        StockDecreased stockDecreased = new StockDecreased(this);
-        stockDecreased.publishAfterCommit();
-    }
+    //     StockDecreased stockDecreased = new StockDecreased(this);
+    //     stockDecreased.publishAfterCommit();
+    // }
 
     public static InventoryRepository repository() {
         InventoryRepository inventoryRepository = InventoryApplication.applicationContext.getBean(
