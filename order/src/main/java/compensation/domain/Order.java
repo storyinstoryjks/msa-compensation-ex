@@ -49,15 +49,7 @@ public class Order {
         return orderRepository;
     }
     public static void updateStatus(OutOfStock outOfStock) {
-        //implement business logic here:
-
-        /** Example 1:  new item 
-        Order order = new Order();
-        repository().save(order);
-
-        */
-
-        /** Example 2:  finding and process
+        /** Example :  finding and process
         
         repository().findById(outOfStock.get???()).ifPresent(order->{
             
